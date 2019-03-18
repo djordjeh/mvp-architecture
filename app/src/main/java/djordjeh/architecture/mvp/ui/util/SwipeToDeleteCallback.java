@@ -1,4 +1,4 @@
-package djordjeh.architecture.mvp.ui.tasks;
+package djordjeh.architecture.mvp.ui.util;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,7 +14,7 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallba
     private final ColorDrawable background;
     private final Drawable icon;
 
-    SwipeToDeleteCallback(Drawable icon) {
+    protected SwipeToDeleteCallback(Drawable icon) {
         super(0, ItemTouchHelper.START | ItemTouchHelper.END);
         this.icon = icon;
         this.background = new ColorDrawable(Color.RED);

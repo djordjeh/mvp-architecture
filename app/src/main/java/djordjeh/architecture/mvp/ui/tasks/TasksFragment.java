@@ -19,6 +19,7 @@ import djordjeh.architecture.mvp.data.model.Task;
 import djordjeh.architecture.mvp.databinding.FragmentTasksBinding;
 import djordjeh.architecture.mvp.ui.BaseFragmentImpl;
 import djordjeh.architecture.mvp.ui.task.TaskFragment;
+import djordjeh.architecture.mvp.ui.util.SwipeToDeleteCallback;
 
 public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> implements TasksContract.View, TasksAdapter.Listener {
 
