@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">To-do MVP</string>
+
+    <string name="no_tasks">No tasks</string>
+    <string name="task_saved">Saved</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="delete">Delete</string>
+    <string name="undo">Undo</string>
+    <string name="task_save_error">Ups, something went wrong</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="error_empty_title">Enter task title</string>
+</resources>
