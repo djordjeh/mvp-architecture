@@ -58,8 +58,8 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:onClickListener="@{()->presenter.save(task)}"
+                android:layout_gravity="end"
+                android:onClickListener="@{()->presenter.saveTask(task)}"
                 android:text="Save" />
 
         </LinearLayout>

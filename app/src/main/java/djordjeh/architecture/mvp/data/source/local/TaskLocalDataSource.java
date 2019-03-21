@@ -11,6 +11,7 @@ import java.util.List;
 
 import djordjeh.architecture.mvp.data.source.TaskDataSource;
 import djordjeh.architecture.mvp.data.model.Task;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -23,25 +24,32 @@ public class TaskLocalDataSource implements TaskDataSource {
     }
 
     @Override
-    public Observable<List<Task>> tasks() {
+    public Observable<List<Task>> tasks(boolean forceUpdate) {
         final String query = String.format("SELECT * FROM %s ORDER BY %s DESC", AppSQLiteHelper.TaskEntity.TABLE_NAME, AppSQLiteHelper.TaskEntity._ID);
         return database.createQuery(AppSQLiteHelper.TaskEntity.TABLE_NAME, query).mapToList(this::getTask);
     }
 
     @Override
-    public Single<Boolean> save(Task task) {
-        final long rowId = database.insert(AppSQLiteHelper.TaskEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_REPLACE, taskContent(task));
-        return Single.just(rowId != -1);
+    public Maybe<Task> task(long taskId) {
+        final String query = String.format("SELECT * FROM %s WHERE %s = ?", AppSQLiteHelper.TaskEntity.TABLE_NAME, AppSQLiteHelper.TaskEntity._ID);
+        return database.createQuery(AppSQLiteHelper.TaskEntity.TABLE_NAME, query, String.valueOf(taskId)).mapToOne(this::getTask).firstElement();
     }
 
     @Override
-    public Single<Task> delete(Task task) {
+    public Single<Task> save(@NonNull Task task) {
+        final long rowId = database.insert(AppSQLiteHelper.TaskEntity.TABLE_NAME, SQLiteDatabase.CONFLICT_REPLACE, taskContent(task));
+        if (rowId != -1) return Single.just(task);
+        else return Single.error(new IllegalArgumentException("Task can't be saved"));
+    }
+
+    @Override
+    public Single<Task> delete(@NonNull Task task) {
         final String whereClause = AppSQLiteHelper.TaskEntity._ID + " = ?";
         final long rowId = database.delete(AppSQLiteHelper.TaskEntity.TABLE_NAME, whereClause, String.valueOf(task.getId()));
         return rowId > 0 ? Single.just(task) : Single.error(new IllegalArgumentException("Task not find"));
     }
 
-    private ContentValues taskContent(Task task) {
+    private ContentValues taskContent(@NonNull Task task) {
         final ContentValues values = new ContentValues();
         values.put(AppSQLiteHelper.TaskEntity._ID, task.getId() == 0 ? System.currentTimeMillis() : task.getId());
         values.put(AppSQLiteHelper.TaskEntity.TITLE, task.getTitle());

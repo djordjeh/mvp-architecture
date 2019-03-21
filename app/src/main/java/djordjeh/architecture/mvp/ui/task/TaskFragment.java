@@ -23,12 +23,13 @@ import djordjeh.architecture.mvp.ui.util.TextWatcherHelper;
 public class TaskFragment extends BottomSheetDialogFragment implements ContractTask.View {
 
     public static final String TAG = "TaskFragment";
-    private static final String ARG_TASK = "arg_task";
+    public static final String ARG_TASK_ID = "arg_task_id";
 
     public static TaskFragment newInstance(@Nullable Task task) {
         Bundle args = new Bundle();
-        // We need a new instance of the task
-        args.putParcelable(ARG_TASK, task != null ? new Task(task.getId(), task.getTitle(), task.getDescription(), task.isCompleted()) : new Task());
+        if (task != null) {
+            args.putLong(ARG_TASK_ID, task.getId());
+        }
         TaskFragment fragment = new TaskFragment();
         fragment.setArguments(args);
         return fragment;
@@ -56,8 +57,10 @@ public class TaskFragment extends BottomSheetDialogFragment implements ContractT
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.setTask(getArguments().getParcelable(ARG_TASK));
         binding.editTextTitle.addTextChangedListener(titleWatcher);
+        if (getArguments() != null && getArguments().containsKey(ARG_TASK_ID)) {
+            presenter.getTask(getArguments().getLong(ARG_TASK_ID));
+        }
     }
 
     @Override
@@ -67,17 +70,20 @@ public class TaskFragment extends BottomSheetDialogFragment implements ContractT
     }
 
     @Override
+    public void showTask(@NonNull Task task) {
+        binding.setTask(task);
+    }
+
+    @Override
     public void showEmptyTitleError(boolean show) {
         binding.inputTitle.setErrorEnabled(show);
         binding.inputTitle.setError(show ? getString(R.string.error_empty_title) : null);
     }
 
     @Override
-    public void onTaskSaved(boolean success) {
-        Toast.makeText(getContext(), success ? R.string.task_saved : R.string.task_save_error, Toast.LENGTH_SHORT).show();
-        if (success) {
-            dismiss();
-        }
+    public void onTaskSaved(@NonNull Task task) {
+        Toast.makeText(getContext(), getString(R.string.task_saved, task.getTitle()), Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 
     @Override

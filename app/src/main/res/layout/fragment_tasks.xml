@@ -2,16 +2,29 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="presenter"
+            type="djordjeh.architecture.mvp.ui.tasks.TasksContract.Presenter"/>
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerTasks"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerTasks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/textEmptyList"
@@ -28,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_gravity="end|bottom"
-            app:srcCompat="@drawable/ic_add_24dp"/>
+            app:srcCompat="@drawable/ic_add_24dp"
+            android:onClickListener="@{()->presenter.addNewTask()}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

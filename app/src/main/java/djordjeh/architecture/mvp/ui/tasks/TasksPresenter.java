@@ -20,17 +20,18 @@ public class TasksPresenter extends BasePresenterImpl<TasksContract.View> implem
     }
 
     @Override
-    public void start() {
+    public void getTasks(boolean forceUpdate) {
+        if (forceUpdate) view.showProgress(true);
         addDisposable(
-                taskDataSource.tasks()
+                taskDataSource.tasks(forceUpdate)
                         .subscribeOn(schedulersFacade.io())
                         .observeOn(schedulersFacade.mainThread())
-                        .subscribe(view::showTasks, view::showError)
+                        .subscribe(view::showTasks, view::showError, () -> view.showProgress(false))
         );
     }
 
     @Override
-    public void save(Task task) {
+    public void saveTask(Task task) {
         addDisposable(taskDataSource.save(task)
                 .subscribeOn(schedulersFacade.io())
                 .observeOn(schedulersFacade.mainThread())
@@ -38,10 +39,20 @@ public class TasksPresenter extends BasePresenterImpl<TasksContract.View> implem
     }
 
     @Override
-    public void delete(Task task) {
+    public void deleteTask(Task task) {
         addDisposable(taskDataSource.delete(task)
                 .subscribeOn(schedulersFacade.io())
                 .observeOn(schedulersFacade.mainThread())
                 .subscribe(view::showTaskDeletedMessage, view::showError));
+    }
+
+    @Override
+    public void addNewTask() {
+        view.showTask(null);
+    }
+
+    @Override
+    public void showTask(Task task) {
+        view.showTask(task);
     }
 }

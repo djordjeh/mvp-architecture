@@ -23,7 +23,16 @@ public class TaskPresenter extends BasePresenterImpl<ContractTask.View> implemen
     }
 
     @Override
-    public void save(Task task) {
+    public void getTask(long taskId) {
+        addDisposable(taskDataSource.task(taskId)
+                .subscribeOn(schedulersFacade.io())
+                .observeOn(schedulersFacade.mainThread())
+                .subscribe(view::showTask, view::showError)
+        );
+    }
+
+    @Override
+    public void saveTask(Task task) {
         if (isEmpty(task.getTitle())) {
             view.showEmptyTitleError(true);
         } else {
@@ -33,11 +42,6 @@ public class TaskPresenter extends BasePresenterImpl<ContractTask.View> implemen
                     .observeOn(schedulersFacade.mainThread())
                     .subscribe(view::onTaskSaved, view::showError));
         }
-    }
-
-    @Override
-    public void start() {
-        // do nothing
     }
 
     private static boolean isEmpty(@Nullable String str) {

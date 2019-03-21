@@ -14,9 +14,9 @@ import djordjeh.architecture.mvp.databinding.ItemTaskBinding;
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
 
     interface Listener {
-        void onTaskSelected(Task task);
-        void onTaskCheckedChanged(Task task);
-        void onTaskDeleted(Task task);
+        void showTask(Task task);
+        void saveTask(Task task);
+        void deleteTask(Task task);
     }
 
     private Listener listener;
@@ -34,7 +34,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
         taskViewHolder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onTaskSelected(list.get(taskViewHolder.getAdapterPosition()));
+                listener.showTask(list.get(taskViewHolder.getAdapterPosition()));
             }
         });
 
@@ -44,7 +44,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
                 // breaks possible infinite loops
                 if (task.isCompleted() != isChecked) {
                     task.setCompleted(isChecked);
-                    listener.onTaskCheckedChanged(task);
+                    listener.saveTask(task);
                 }
             }
         });
@@ -65,7 +65,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     }
 
     void removeTask(int index) {
-        listener.onTaskDeleted(list.get(index));
+        listener.deleteTask(list.get(index));
         list.remove(index);
         notifyItemRemoved(index);
     }
