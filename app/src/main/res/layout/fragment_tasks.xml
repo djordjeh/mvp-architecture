@@ -42,7 +42,7 @@
             android:layout_margin="16dp"
             android:layout_gravity="end|bottom"
             app:srcCompat="@drawable/ic_add_24dp"
-            android:onClickListener="@{()->presenter.addNewTask()}"/>
+            android:onClick="@{()->presenter.addNewTask()}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

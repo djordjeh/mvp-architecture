@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -38,13 +39,12 @@ public class TasksPresenterTest {
     @Mock
     private SchedulersFacade schedulersFacade;
 
+    @InjectMocks
     private TasksPresenter presenter;
 
     @Before
     public void setupPresenterTasks() {
         MockitoAnnotations.initMocks(this);
-
-        presenter = new TasksPresenter(view, taskDataSource, schedulersFacade);
 
         // SchedulersFacade
         Mockito.doReturn(Schedulers.trampoline()).when(schedulersFacade).io();
@@ -122,6 +122,13 @@ public class TasksPresenterTest {
     public void showTaskIntoView() {
         presenter.showTask(task);
         verify(view).showTask(task);
+    }
+
+    @Test
+    public void refreshTasksAndShowIntoView() {
+        Mockito.doReturn(Observable.just(tasksResult)).when(taskDataSource).tasks(true);
+        presenter.onRefresh();
+        verify(taskDataSource).tasks(true);
     }
 
     @After

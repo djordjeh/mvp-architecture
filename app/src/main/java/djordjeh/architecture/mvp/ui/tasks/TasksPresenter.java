@@ -55,4 +55,9 @@ public class TasksPresenter extends BasePresenterImpl<TasksContract.View> implem
     public void showTask(Task task) {
         view.showTask(task);
     }
+
+    @Override
+    public void onRefresh() {
+        getTasks(true);
+    }
 }

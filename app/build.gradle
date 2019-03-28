@@ -16,6 +16,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        mock {
+            debuggable true
+            jniDebuggable false
+            renderscriptDebuggable false
+            minifyEnabled false
+            zipAlignEnabled true
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -29,10 +36,11 @@ android {
     sourceSets {
         debug.java.srcDir 'src/release/java'
     }
+
+    testOptions.unitTests.includeAndroidResources = true
 }
 
 dependencies {
-
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
@@ -49,7 +57,6 @@ dependencies {
 
     // ReactiveX
     implementation "io.reactivex.rxjava2:rxandroid:$project.rxAndroidVersion"
-
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
@@ -65,4 +72,18 @@ dependencies {
     // Dependencies for local unit tests
     testImplementation "junit:junit:$project.junitVersion"
     testImplementation "org.mockito:mockito-all:$project.mockitoVersion"
+
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.2'
+    testImplementation 'org.robolectric:shadows-supportv4:4.2'
+    testImplementation "com.google.dagger:dagger:$project.daggerVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$project.daggerVersion"
+
+
+}
+
+// Test project needs to find generated classes by dagger
+android.applicationVariants.all {
+    def aptOutputDir = new File(buildDir, "generated/source/apt/${it.unitTestVariant.dirName}")
+    it.unitTestVariant.addJavaSourceFoldersToModel(aptOutputDir)
 }

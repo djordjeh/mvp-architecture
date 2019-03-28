@@ -3,6 +3,7 @@ package djordjeh.architecture.mvp.ui.task;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,13 +30,12 @@ public class TaskDetailsPresenterTest {
     @Mock
     private SchedulersFacade schedulersFacade;
 
+    @InjectMocks
     private TaskPresenter presenter;
 
     @Before
     public void setupPresenterTask() {
         MockitoAnnotations.initMocks(this);
-
-        presenter = new TaskPresenter(view, taskDataSource, schedulersFacade);
 
         // SchedulersFacade
         Mockito.doReturn(Schedulers.trampoline()).when(schedulersFacade).io();

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import djordjeh.architecture.mvp.ui.BaseFragmentImpl;
 import djordjeh.architecture.mvp.ui.task.TaskFragment;
 import djordjeh.architecture.mvp.ui.util.SwipeToDeleteCallback;
 
-public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> implements TasksContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> implements TasksContract.View {
 
     public static final String TAG = "TasksFragment";
     public static TasksFragment newInstance() {
@@ -45,7 +44,6 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
             }
         }).attachToRecyclerView(binding.recyclerTasks);
         adapter.registerAdapterDataObserver(observer);
-        binding.refreshLayout.setOnRefreshListener(this);
         return binding.getRoot();
     }
 
@@ -59,11 +57,13 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
     public void onResume() {
         super.onResume();
         this.adapter.setListener(presenter);
+        this.binding.refreshLayout.setOnRefreshListener(presenter);
     }
 
     @Override
     public void onPause() {
         this.adapter.setListener(null);
+        this.binding.refreshLayout.setOnRefreshListener(null);
         super.onPause();
     }
 
@@ -72,11 +72,6 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
         adapter.unregisterAdapterDataObserver(observer);
         binding.refreshLayout.setOnRefreshListener(null);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onRefresh() {
-        presenter.getTasks(true);
     }
 
     @Override
@@ -108,9 +103,7 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
 
     @Override
     public void showTaskDeletedMessage(Task task) {
-        Snackbar.make(binding.getRoot(), R.string.task_deleted, Snackbar.LENGTH_LONG).setAction(R.string.undo, v -> {
-            presenter.saveTask(task);
-        }).show();
+        Snackbar.make(binding.getRoot(), R.string.task_deleted, Snackbar.LENGTH_LONG).setAction(R.string.undo, v -> presenter.saveTask(task)).show();
     }
 
     private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
