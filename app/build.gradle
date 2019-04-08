@@ -28,6 +28,9 @@ android {
     // debug variants uses the same source dir as release
     sourceSets {
         debug.java.srcDir 'src/release/java'
+        String sharedTestDir = 'src/sharedTest/java'
+        test.java.srcDir sharedTestDir
+        androidTest.java.srcDir sharedTestDir
     }
 
     testOptions.unitTests.includeAndroidResources = true
