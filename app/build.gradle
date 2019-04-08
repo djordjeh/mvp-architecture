@@ -16,13 +16,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        mock {
-            debuggable true
-            jniDebuggable false
-            renderscriptDebuggable false
-            minifyEnabled false
-            zipAlignEnabled true
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -108,10 +101,4 @@ dependencies {
 
     // Mockito
     androidTestImplementation "org.mockito:mockito-android:2.19.0"
-}
-
-// Test project needs to find generated classes by dagger
-android.applicationVariants.all {
-    def aptOutputDir = new File(buildDir, "generated/source/apt/${it.unitTestVariant.dirName}")
-    it.unitTestVariant.addJavaSourceFoldersToModel(aptOutputDir)
 }
