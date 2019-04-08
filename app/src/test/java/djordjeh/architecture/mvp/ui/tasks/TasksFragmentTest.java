@@ -54,7 +54,7 @@ public class TasksFragmentTest {
         protected void afterActivityLaunched() {
             getActivity().startFragment(fragment, instance -> {
                 if (instance instanceof TasksFragment) {
-                    fragment.presenter = presenter;
+                    fragment.setPresenter(presenter);
                 }
             });
         }

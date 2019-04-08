@@ -28,21 +28,21 @@ public class TaskPresenter extends BasePresenterImpl<ContractTask.View> implemen
             addDisposable(taskDataSource.task(taskId)
                     .subscribeOn(schedulersFacade.io())
                     .observeOn(schedulersFacade.mainThread())
-                    .subscribe(view::showTask, view::showError)
+                    .subscribe(getView()::showTask, getView()::showError)
             );
-        } else view.showTask(new Task());
+        } else getView().showTask(new Task());
     }
 
     @Override
     public void saveTask(Task task) {
         if (isEmpty(task.getTitle())) {
-            view.showEmptyTitleError(true);
+            getView().showEmptyTitleError(true);
         } else {
-            view.showEmptyTitleError(false);
+            getView().showEmptyTitleError(false);
             addDisposable(taskDataSource.save(task)
                     .subscribeOn(schedulersFacade.io())
                     .observeOn(schedulersFacade.mainThread())
-                    .subscribe(view::onTaskSaved, view::showError));
+                    .subscribe(getView()::onTaskSaved, getView()::showError));
         }
     }
 

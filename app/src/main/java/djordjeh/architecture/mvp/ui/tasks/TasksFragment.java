@@ -35,7 +35,7 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentTasksBinding.inflate(inflater, container, false);
-        binding.setPresenter(presenter);
+        binding.setPresenter(getPresenter());
         binding.recyclerTasks.setAdapter(adapter);
         new ItemTouchHelper(new SwipeToDeleteCallback(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete_24dp)){
             @Override
@@ -50,14 +50,14 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.getTasks(false);
+        getPresenter().getTasks(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        this.adapter.setListener(presenter);
-        this.binding.refreshLayout.setOnRefreshListener(presenter);
+        this.adapter.setListener(getPresenter());
+        this.binding.refreshLayout.setOnRefreshListener(getPresenter());
     }
 
     @Override
@@ -98,12 +98,12 @@ public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> imp
     @Override
     public void showSavedMessage(@NonNull Task task) {
         // Simple Feedback message
-        Toast.makeText(getContext(), task.isCompleted() ? getString(R.string.task_completed, task.getTitle()) : getString(R.string.task_not_completed, task.getTitle()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), task.getCompleted() ? getString(R.string.task_completed, task.getTitle()) : getString(R.string.task_not_completed, task.getTitle()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showTaskDeletedMessage(Task task) {
-        Snackbar.make(binding.getRoot(), R.string.task_deleted, Snackbar.LENGTH_LONG).setAction(R.string.undo, v -> presenter.saveTask(task)).show();
+        Snackbar.make(binding.getRoot(), R.string.task_deleted, Snackbar.LENGTH_LONG).setAction(R.string.undo, v -> getPresenter().saveTask(task)).show();
     }
 
     private RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {

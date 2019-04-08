@@ -42,7 +42,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             if (listener != null) {
                 final Task task = list.get(taskViewHolder.getAdapterPosition());
                 // breaks possible infinite loops
-                if (task.isCompleted() != isChecked) {
+                if (task.getCompleted() != isChecked) {
                     task.setCompleted(isChecked);
                     listener.saveTask(task);
                 }
