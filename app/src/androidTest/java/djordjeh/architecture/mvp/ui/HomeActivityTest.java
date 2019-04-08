@@ -54,7 +54,7 @@ public class HomeActivityTest {
     private static final String EMPTY = "";
     private static final Task OLD_TASK = new Task(1, "Old task", "Description of the old task", true);
     private static final Task NEW_TASK = new Task(2, "New task", "Description of the new task", false);
-    private static final List<Task> tasksResult = Arrays.asList(OLD_TASK, NEW_TASK);
+    private static final List<Task> TASK_LIST = Arrays.asList(OLD_TASK, NEW_TASK);
 
     @Mock
     private TaskDataSource taskDataSource;
@@ -75,41 +75,52 @@ public class HomeActivityTest {
                 .build();
         component.inject(application);
 
-        Mockito.doReturn(Observable.just(tasksResult)).when(taskDataSource).tasks(false);
+        Mockito.doReturn(Observable.just(TASK_LIST)).when(taskDataSource).tasks(false);
         activityRule.launchActivity(new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), HomeActivity.class));
     }
 
     @Test
     public void checkEmptyList() {
         Mockito.doReturn(Observable.just(new ArrayList<Task>())).when(taskDataSource).tasks(true);
+        // Swipe down for refresh and return empty array
         onView(withId(R.id.recyclerTasks)).perform(swipeDown());
+
+        // Check if recycler view is empty
         onView(withId(R.id.recyclerTasks)).check(matches(withItemCount(0)));
+
+        // Check if empty text view is displayed
         onView(withId(R.id.textEmptyList)).check(matches(isDisplayed()));
     }
 
     @Test
     public void checkNonEmptyList() {
+        // By default we should have two tasks from @TASK_LIST
         onView(withId(R.id.recyclerTasks)).check(matches(withItemCount(2)));
+
+        // Empty text view should not be displayed
         onView(withId(R.id.textEmptyList)).check(matches(not(isDisplayed())));
-        onView(withText(NEW_TASK.getTitle())).check(matches(isDisplayed()));
+
+        // Check if OLD_TASK & NEW_TASK are displayed
         onView(withText(OLD_TASK.getTitle())).check(matches(isDisplayed()));
+        onView(withText(NEW_TASK.getTitle())).check(matches(isDisplayed()));
     }
 
     @Test
     public void showTaskDetails_andEditOldTask() {
         Mockito.doReturn(Maybe.just(OLD_TASK)).when(taskDataSource).task(OLD_TASK.getId());
 
-        // Show Task details
+        // Click on first task in list @OLD_TASK
         onView(withId(R.id.recyclerTasks)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         // From some reason I'm not able to make it to work, always returns index -1
 //        onView(withId(R.id.recyclerTasks)).perform(RecyclerViewActions.actionOnItem(
 //                hasDescendant(withText(OLD_TASK.getTitle())), click()));
 
+        // Check if Task title and description are displayed
         onView(withId(R.id.editTextTitle)).check(matches(withText(OLD_TASK.getTitle())));
         onView(withId(R.id.editTextDescription)).check(matches(withText(OLD_TASK.getDescription())));
 
-        // Edit Task
+        // Edit Task title
         onView(withId(R.id.editTextTitle)).perform(clearText(), typeText("Old task edited"), closeSoftKeyboard());
 
         // Rotate The screen
@@ -117,33 +128,46 @@ public class HomeActivityTest {
 
         // Save the task
         onView(withId(R.id.buttonSubmit)).perform(click());
+
+        // Verify save task is displayed on screen.
         onView(withText(context.getString(R.string.task_saved, "Old task edited"))).inRoot(isToast()).check(matches(isDisplayed()));
     }
 
     @Test
     public void showNewTaskScreen_andAddNewTask() {
-        // Show add task screen
+        // Click on the add task button
         onView(withId(R.id.buttonAdd)).perform(click());
-        onView(withId(R.id.layoutTaskDetails)).check(matches(isDisplayed()));
+
+        // Check if Task title and description are empty
         onView(withId(R.id.editTextTitle)).check(matches(withText(EMPTY)));
         onView(withId(R.id.editTextDescription)).check(matches(withText(EMPTY)));
 
-        // Add new task
+        // Enter task title and description
         onView(withId(R.id.editTextTitle)).perform(typeText(NEW_TASK.getTitle()), closeSoftKeyboard());
         onView(withId(R.id.editTextDescription)).perform(typeText(NEW_TASK.getDescription()), closeSoftKeyboard());
+
+        // Save the task
         onView(withId(R.id.buttonSubmit)).perform(click());
+
+        // Verify save task is displayed on screen.
         onView(withText(context.getString(R.string.task_saved, NEW_TASK.getTitle()))).inRoot(isToast()).check(matches(isDisplayed()));
     }
 
     @Test
     public void deleteTask_undoDelete() {
-        // Delete
+        // Swipe task from list to delete it
         onView(withId(R.id.recyclerTasks)).perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeLeft()));
+
+        // Verify Snackbar is displayed with proper message
         onView(withId(com.google.android.material.R.id.snackbar_text)).check(matches(withText(R.string.task_deleted)));
+
+        // Verify task is not displayed on screen in the task list.
         onView(withText(OLD_TASK.getTitle())).check(matches(not(isDisplayed())));
 
-        // Undo
+        // Click on UNDO action in Snackbar
         onView(withId(com.google.android.material.R.id.snackbar_action)).perform(click());
+
+        // Verify Toast message for save task is displayed on screen.
         onView(withText(context.getString(R.string.task_completed, OLD_TASK.getTitle()))).inRoot(isToast()).check(matches(isDisplayed()));
     }
 }
