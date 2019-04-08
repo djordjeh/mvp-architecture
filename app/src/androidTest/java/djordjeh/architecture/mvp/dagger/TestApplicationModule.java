@@ -1,11 +1,10 @@
 package djordjeh.architecture.mvp.dagger;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
 import javax.inject.Singleton;
 
+import androidx.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import djordjeh.architecture.mvp.data.model.Task;
@@ -18,12 +17,18 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 @Module
-class TestApplicationModule {
+public class TestApplicationModule {
+
+    private TaskDataSource taskDataSource;
+
+    public TestApplicationModule(TaskDataSource taskDataSource) {
+        this.taskDataSource = taskDataSource;
+    }
 
     @Provides
     @Singleton
     TaskDataSource taskRepository() {
-        return new MockTaskRemoteDataSource();
+        return new MockTasksDataSource(taskDataSource);
     }
 
     @Provides
@@ -50,17 +55,22 @@ class TestApplicationModule {
         }
     }
 
-    static class MockTaskRemoteDataSource implements TaskDataSource {
+    static class MockTasksDataSource implements TaskDataSource {
+
+        private TaskDataSource taskDataSource;
+
+        MockTasksDataSource(TaskDataSource taskDataSource) {
+            this.taskDataSource = taskDataSource;
+        }
 
         @Override
         public Observable<List<Task>> tasks(boolean forceUpdate) {
-
-            return Observable.empty();
+            return taskDataSource.tasks(forceUpdate);
         }
 
         @Override
         public Maybe<Task> task(long taskId) {
-            return Maybe.empty();
+            return taskDataSource.task(taskId);
         }
 
         @Override

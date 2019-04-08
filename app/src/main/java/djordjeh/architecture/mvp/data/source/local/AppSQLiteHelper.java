@@ -1,7 +1,7 @@
 package djordjeh.architecture.mvp.data.source.local;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class AppSQLiteHelper extends SupportSQLiteOpenHelper.Callback {

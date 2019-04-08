@@ -21,7 +21,6 @@ public class TasksPresenter extends BasePresenterImpl<TasksContract.View> implem
 
     @Override
     public void getTasks(boolean forceUpdate) {
-        if (forceUpdate) view.showProgress(true);
         addDisposable(
                 taskDataSource.tasks(forceUpdate)
                         .subscribeOn(schedulersFacade.io())

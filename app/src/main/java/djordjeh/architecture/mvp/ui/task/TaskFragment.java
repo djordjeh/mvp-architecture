@@ -2,9 +2,9 @@ package djordjeh.architecture.mvp.ui.task;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,12 +18,13 @@ import dagger.android.support.AndroidSupportInjection;
 import djordjeh.architecture.mvp.R;
 import djordjeh.architecture.mvp.data.model.Task;
 import djordjeh.architecture.mvp.databinding.FragmentTaskBinding;
-import djordjeh.architecture.mvp.ui.util.TextWatcherHelper;
+import djordjeh.architecture.mvp.util.TextWatcherHelper;
 
 public class TaskFragment extends BottomSheetDialogFragment implements ContractTask.View {
 
     public static final String TAG = "TaskFragment";
-    public static final String ARG_TASK_ID = "arg_task_id";
+    private static final String ARG_TASK = "arg_task";
+    private static final String ARG_TASK_ID = "arg_task_id";
 
     public static TaskFragment newInstance(@Nullable Task task) {
         Bundle args = new Bundle();
@@ -36,7 +37,7 @@ public class TaskFragment extends BottomSheetDialogFragment implements ContractT
     }
 
     @Inject
-    ContractTask.Presenter presenter;
+    public ContractTask.Presenter presenter;
 
     private FragmentTaskBinding binding;
 
@@ -58,8 +59,11 @@ public class TaskFragment extends BottomSheetDialogFragment implements ContractT
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.editTextTitle.addTextChangedListener(titleWatcher);
-        if (getArguments() != null && getArguments().containsKey(ARG_TASK_ID)) {
-            presenter.getTask(getArguments().getLong(ARG_TASK_ID));
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_TASK)) {
+            binding.setTask(savedInstanceState.getParcelable(ARG_TASK));
+        } else {
+            presenter.getTask(getArguments() != null ? getArguments().getLong(ARG_TASK_ID, -1) : -1);
         }
     }
 
@@ -89,6 +93,15 @@ public class TaskFragment extends BottomSheetDialogFragment implements ContractT
     @Override
     public void showError(Throwable throwable) {
         Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        final Task task = binding.getTask();
+        if (task != null) {
+            outState.putParcelable(ARG_TASK, task);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     private TextWatcherHelper titleWatcher = new TextWatcherHelper() {

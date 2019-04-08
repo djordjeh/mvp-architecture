@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjector;
-import djordjeh.architecture.mvp.ToDoApplication;
+import dagger.android.support.DaggerApplication;
 import djordjeh.architecture.mvp.data.DataModule;
 
 @Singleton
@@ -16,7 +16,7 @@ import djordjeh.architecture.mvp.data.DataModule;
         ApplicationModule.class,
         DataModule.class
 })
-interface ApplicationComponent extends AndroidInjector<ToDoApplication> {
+public interface ApplicationComponent extends AndroidInjector<DaggerApplication> {
 
     @Component.Builder
     interface Builder
@@ -28,5 +28,5 @@ interface ApplicationComponent extends AndroidInjector<ToDoApplication> {
     }
 
     @Override
-    void inject(ToDoApplication application);
+    void inject(DaggerApplication application);
 }

@@ -1,7 +1,7 @@
 package djordjeh.architecture.mvp.ui.task;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import djordjeh.architecture.mvp.data.model.Task;
 import djordjeh.architecture.mvp.ui.BasePresenter;

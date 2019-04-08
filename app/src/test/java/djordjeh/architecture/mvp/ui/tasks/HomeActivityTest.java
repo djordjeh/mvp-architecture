@@ -1,32 +1,25 @@
 package djordjeh.architecture.mvp.ui.tasks;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-
-import djordjeh.architecture.mvp.R;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SmallTest;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
+@SmallTest
 public class HomeActivityTest {
 
-    private HomeActivity activity;
-
-    @Before
-    public void setUp() {
-        activity = Robolectric.buildActivity(HomeActivity.class).create().resume().get();
-    }
-
-    @Test
-    public void shouldNotBeNull() {
-        assertNotNull(activity);
-    }
+    @Rule
+    public ActivityTestRule<HomeActivity> activityRule = new ActivityTestRule<>(HomeActivity.class);
 
     @Test
     public void shouldHaveTasksFragment() {
-        assertNotNull(activity.getSupportFragmentManager().findFragmentById(R.id.container));
+        assertNotNull("TasksFragment not added", activityRule.getActivity().getSupportFragmentManager().findFragmentByTag(TasksFragment.TAG));
     }
+
+
 }

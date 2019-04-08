@@ -1,6 +1,6 @@
 package djordjeh.architecture.mvp.data.source.remote;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ public class TaskRemoteDataSource implements TaskDataSource {
         add(TASK);
     }};
 
+    // I've decided to use mocked remote data source
     public TaskRemoteDataSource() {
     }
 

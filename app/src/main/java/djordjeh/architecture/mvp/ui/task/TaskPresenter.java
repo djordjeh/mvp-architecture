@@ -1,7 +1,7 @@
 package djordjeh.architecture.mvp.ui.task;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -24,11 +24,13 @@ public class TaskPresenter extends BasePresenterImpl<ContractTask.View> implemen
 
     @Override
     public void getTask(long taskId) {
-        addDisposable(taskDataSource.task(taskId)
-                .subscribeOn(schedulersFacade.io())
-                .observeOn(schedulersFacade.mainThread())
-                .subscribe(view::showTask, view::showError)
-        );
+        if (taskId != -1) {
+            addDisposable(taskDataSource.task(taskId)
+                    .subscribeOn(schedulersFacade.io())
+                    .observeOn(schedulersFacade.mainThread())
+                    .subscribe(view::showTask, view::showError)
+            );
+        } else view.showTask(new Task());
     }
 
     @Override

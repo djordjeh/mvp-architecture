@@ -1,12 +1,12 @@
 package djordjeh.architecture.mvp.ui.tasks;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,12 @@ import djordjeh.architecture.mvp.data.model.Task;
 import djordjeh.architecture.mvp.databinding.FragmentTasksBinding;
 import djordjeh.architecture.mvp.ui.BaseFragmentImpl;
 import djordjeh.architecture.mvp.ui.task.TaskFragment;
-import djordjeh.architecture.mvp.ui.util.SwipeToDeleteCallback;
+import djordjeh.architecture.mvp.util.SwipeToDeleteCallback;
 
 public class TasksFragment extends BaseFragmentImpl<TasksContract.Presenter> implements TasksContract.View {
 
-    public static final String TAG = "TasksFragment";
-    public static TasksFragment newInstance() {
+    static final String TAG = "TasksFragment";
+    static TasksFragment newInstance() {
         return new TasksFragment();
     }
 

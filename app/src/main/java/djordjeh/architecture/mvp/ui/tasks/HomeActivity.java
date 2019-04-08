@@ -1,9 +1,8 @@
 package djordjeh.architecture.mvp.ui.tasks;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import dagger.android.support.DaggerAppCompatActivity;
 import djordjeh.architecture.mvp.R;
 

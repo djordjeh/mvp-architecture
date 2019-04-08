@@ -1,18 +1,19 @@
 package djordjeh.architecture.mvp.dagger;
 
+
 import javax.inject.Singleton;
 
 import dagger.Component;
 import dagger.android.AndroidInjector;
-import djordjeh.architecture.mvp.TestApplication;
+import dagger.android.support.DaggerApplication;
 
 @Singleton
 @Component(modules = {
         ActivityBindingModule.class,
         TestApplicationModule.class
 })
-interface TestApplicationComponent extends AndroidInjector<TestApplication> {
+public interface TestApplicationComponent extends AndroidInjector<DaggerApplication> {
 
     @Override
-    void inject(TestApplication application);
+    void inject(DaggerApplication application);
 }

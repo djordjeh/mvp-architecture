@@ -3,7 +3,7 @@ package djordjeh.architecture.mvp.data.source.local;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 

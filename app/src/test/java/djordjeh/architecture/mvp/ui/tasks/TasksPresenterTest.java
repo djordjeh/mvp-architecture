@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import djordjeh.architecture.mvp.data.model.Task;
@@ -26,9 +27,8 @@ public class TasksPresenterTest {
 
     private static final Throwable throwable = new Throwable("No Internet connection");
     private static final Task task = new Task(1, "Title", "Description", false);
-    private static final List<Task> tasksResult = new ArrayList<Task>() {{
-        add(task);
-    }};
+    private static final Task task2 = new Task(2, "Title2", "Description2", true);
+    private static final List<Task> tasksResult = Arrays.asList(task, task2);
 
     @Mock
     private TasksContract.View view;
@@ -59,7 +59,6 @@ public class TasksPresenterTest {
         verify(taskDataSource).tasks(forceUpdate);
 
         InOrder inOrder = Mockito.inOrder(view);
-        inOrder.verify(view).showProgress(true);
         inOrder.verify(view).showTasks(tasksResult);
         inOrder.verify(view).showProgress(false);
     }

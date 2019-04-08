@@ -1,4 +1,4 @@
-package djordjeh.architecture.mvp.ui.util;
+package djordjeh.architecture.mvp.util;
 
 import android.text.TextWatcher;
 

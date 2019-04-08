@@ -1,6 +1,6 @@
 package djordjeh.architecture.mvp.ui;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
@@ -10,7 +10,7 @@ public class BaseFragmentImpl<P extends BasePresenter> extends DaggerFragment {
 
     @NonNull
     @Inject
-    protected P presenter;
+    public P presenter;
 
     @Override
     public void onDestroyView() {
