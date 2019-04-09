@@ -2,12 +2,7 @@ Android MVP Architecture / Todo app (Java/Kotlin)
 ==============================================
 
 The app is called To-do MVP and it shows how I like to implement and organize things with MVP architecture.
-It will contain two repo: Java and Kotlin. 
-
-The project is still in process.
-Missing things:
-* Unit tests, Integration tests, UI tests
-* Kotlin way
+The project contains two branches: Java and Kotlin. 
 
 License
 -------
